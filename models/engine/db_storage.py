@@ -1,0 +1,35 @@
+#!/usr/bin/python3
+"""Module to create a mysql engine"""
+
+import os
+from models.base_model import BaseModel, Base
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
+
+
+class DBStorage:
+    """This class creates the engine for a mysql database
+    storage system"""
+
+    all_classes = {"BaseModel": BaseModel, "User": User, "State": State,
+                   "City": City, "Amenity": Amenity, "Place": Place,
+                   "Review": Review}
+    __engine = None
+    __session = None
+
+    def __init__(self):
+        """Instatiate the engine and drop if test database"""
+        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
+            os.environ['HBNB_MYSQL_USER'],
+            os.environ['HBNB_MYSQL_PWD'],
+            os.environ['HBNB_MYSQL_HOST'],
+            os.environ['HBNB_MYSQL_DB']), pool_pre_ping=True)
+        if os.getenv('HBNB_ENV') == 'test':
+            Base.metadata.drop_all(self.__engine)
