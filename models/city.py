@@ -1,20 +1,20 @@
-#!/usr/bin/python3
-""" holds class State"""
+#!/usr/bin/python
+""" holds class City"""
 import models
 from models.base_model import BaseModel, Base
-from models.city import City
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 
-class State(BaseModel, Base):
-    """Representation of state """
+class City(BaseModel, Base):
+    """Representation of city """
     if models.storage_t == "db":
-        __tablename__ = 'states'
+        __tablename__ = 'cities'
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
         name = Column(String(128), nullable=False)
-        cities = relationship("City", backref="state")
+        places = relationship("Place", backref="cities")
     else:
+        state_id = ""
         name = ""
-    cites = []
